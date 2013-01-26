@@ -1,0 +1,13 @@
+.logo 	{
+	height:50px;
+	}
+
+img.logo {
+	position:relative;
+	top:14px;
+	}
+span.logo {
+	display: inline-block;
+	font-size: 2.2em;
+	font-family: muli, "Myriad Pro", "Trebuchet MS", sans;
+	}
