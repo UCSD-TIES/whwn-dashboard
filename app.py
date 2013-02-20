@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 
 #CouchDB Config files
-COUCHDB_SERVER = process.env['CLOUDANT_URL']
+COUCHDB_SERVER = os.environ['CLOUDANT_URL']
 COUCHDB_DATABASE = 'wstats'
 
 app.config.from_object(__name__)
@@ -47,50 +47,50 @@ def post():
     serverUsage = request.form.get('server')
     serverRequest = request.form.get('mytype')
     if serverUsage == "PD":
-        envhost = process.env['PROD_SSH_HOST']
-        envport = process.env['PROD_DB_SSH_PORT']
-        envuser = process.env['PROD_DB_SSH_USER']
-        envprivatekey = process.env['dotcloudPRIVATEKEY']
+        envhost = os.environ['PROD_SSH_HOST']
+        envport = os.environ['PROD_DB_SSH_PORT']
+        envuser = os.environ['PROD_DB_SSH_USER']
+        envprivatekey = os.environ['dotcloudPRIVATEKEY']
     if serverUsage == "PP":
-        envhost = process.env['PROD_SSH_HOST']
-        envport = process.env['PROD_PY_SSH_PORT']
-        envuser = process.env['PROD_PY_SSH_USER']
-        envprivatekey = process.env['dotcloudPRIVATEKEY']
+        envhost = os.environ['PROD_SSH_HOST']
+        envport = os.environ['PROD_PY_SSH_PORT']
+        envuser = os.environ['PROD_PY_SSH_USER']
+        envprivatekey = os.environ['dotcloudPRIVATEKEY']
     if serverUsage == "PQ":
-        envhost = process.env['PROD_SSH_HOST']
-        envport = process.env['PROD_Q_SSH_PORT']
-        envuser = process.env['PROD_Q_SSH_USER']
-        envprivatekey = process.env['dotcloudPRIVATEKEY']
+        envhost = os.environ['PROD_SSH_HOST']
+        envport = os.environ['PROD_Q_SSH_PORT']
+        envuser = os.environ['PROD_Q_SSH_USER']
+        envprivatekey = os.environ['dotcloudPRIVATEKEY']
     if serverUsage == "PW":
-        envhost = process.env['PROD_SSH_HOST']
-        envport = process.env['PROD_WORKERS_SSH_PORT']
-        envuser = process.env['PROD_WORKERS_SSH_USER']
-        envprivatekey = process.env['dotcloudPRIVATEKEY']
+        envhost = os.environ['PROD_SSH_HOST']
+        envport = os.environ['PROD_WORKERS_SSH_PORT']
+        envuser = os.environ['PROD_WORKERS_SSH_USER']
+        envprivatekey = os.environ['dotcloudPRIVATEKEY']
     if serverUsage == "SD":
-        envhost = process.env['STAGING_SSH_HOST']
-        envport = process.env['STAGING_DB_SSH_PORT']
-        envuser = process.env['STAGING_DB_SSH_USER']
-        envprivatekey = process.env['dotcloudPRIVATEKEY']
+        envhost = os.environ['STAGING_SSH_HOST']
+        envport = os.environ['STAGING_DB_SSH_PORT']
+        envuser = os.environ['STAGING_DB_SSH_USER']
+        envprivatekey = os.environ['dotcloudPRIVATEKEY']
     if serverUsage == "SP":
-        envhost = process.env['STAGING_SSH_HOST']
-        envport = process.env['STAGING_PY_SSH_PORT']
-        envuser = process.env['STAGING_PY_SSH_USER']
-        envprivatekey = process.env['dotcloudPRIVATEKEY']
+        envhost = os.environ['STAGING_SSH_HOST']
+        envport = os.environ['STAGING_PY_SSH_PORT']
+        envuser = os.environ['STAGING_PY_SSH_USER']
+        envprivatekey = os.environ['dotcloudPRIVATEKEY']
     if serverUsage == "SQ":
-        envhost = process.env['STAGING_SSH_HOST']
-        envport = process.env['STAGING_Q_SSH_PORT']
-        envuser = process.env['STAGING_Q_SSH_USER']
-        envprivatekey = process.env['dotcloudPRIVATEKEY']
+        envhost = os.environ['STAGING_SSH_HOST']
+        envport = os.environ['STAGING_Q_SSH_PORT']
+        envuser = os.environ['STAGING_Q_SSH_USER']
+        envprivatekey = os.environ['dotcloudPRIVATEKEY']
     if serverUsage == "SW":
-        envhost = process.env['STAGING_SSH_HOST']
-        envport = process.env['STAGING_WORKERS_SSH_PORT']
-        envuser = process.env['STAGING_WORKERS_SSH_USER']
-        envprivatekey = process.env['dotcloudPRIVATEKEY']
+        envhost = os.environ['STAGING_SSH_HOST']
+        envport = os.environ['STAGING_WORKERS_SSH_PORT']
+        envuser = os.environ['STAGING_WORKERS_SSH_USER']
+        envprivatekey = os.environ['dotcloudPRIVATEKEY']
     if serverUsage == "ES":
-        envhost = process.env['EC2_ES_SSH_HOST']
+        envhost = os.environ['EC2_ES_SSH_HOST']
         envport = 22
-        envuser = process.env['EC2_ES_SSH_USER']
-        envprivatekey = process.env['ec2PRIVATEKEY']
+        envuser = os.environ['EC2_ES_SSH_USER']
+        envprivatekey = os.environ['ec2PRIVATEKEY']
     #Gets the load average in number form . 0.00
     if serverRequest == "CL":
         SSHCOMMAND="w | head -1 | awk '{print $11}' | rev | cut -b 2- | rev"
