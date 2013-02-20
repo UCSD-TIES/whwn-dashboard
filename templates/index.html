@@ -8,5 +8,34 @@
 	<span style="font-weight:bold" class="logo">have</span>
 	<span class="logo">we</span>
 	<span style="font-weight:bold" class="logo">need</span>
-</body>
+        <form method=post action="{{ url_for('post') }}">
+            <dd><select name=server>
+                <option value="PD">Production Database </option>
+                <option value="PP">Production Python </option>
+                <option value="PQ">Production Queue </option>
+                <option value="PW">Production Workers </option>
+                <option value="SD">Staging Database </option>
+                <option value="SP">Staging Python </option>
+                <option value="SQ">Staging Queue </option>
+                <option value="SW">Staging Workers </option>
+                <option value="ES">Elastic Search </option>
+            </select>
+            <dd><select name=mtype>
+                <option value="TP">Display Status</option>
+                <option value="MM">Memory Used</option>
+                <option value="MF">Memory Free"</option>
+                <option value="CL">CPU Load Average </option>
+                <option value="CU">CPU Percent Used </option>
+            </select>
+            <input type=submit value=Submit>
+        </form>
+
+    <ul>
+    {%- for wstat in page.items %}
+        <li><p> {{ wstat.ctime }}
+        <li><p> {{ wstat.loadavg }}
+    {%- endfor %}
+</body> 
+
+
 </html>
