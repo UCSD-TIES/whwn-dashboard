@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 
 #CouchDB Config files
-COUCHDB_SERVER = 'http://localhost:5984/'
+COUCHDB_SERVER = process.env['CLOUDANT_URL']
 COUCHDB_DATABASE = 'wstats'
 
 app.config.from_object(__name__)
