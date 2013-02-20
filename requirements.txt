@@ -1,4 +1,3 @@
 Flask
 paramiko
-flaskext
-flaskext.couchdb
+Flask-CouchDB
