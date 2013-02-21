@@ -46,7 +46,7 @@ def index():
 def post():
     #Grabs server parameters and requests
     serverUsage = request.form.get('server')
-    serverRequest = request.form.get('mytype')
+    serverRequest = request.form.get('mtype')
     if serverUsage == "PD":
         envhost = os.environ['PROD_SSH_HOST']
         envport = os.environ['PROD_DB_SSH_PORT']
