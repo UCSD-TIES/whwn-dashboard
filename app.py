@@ -109,10 +109,11 @@ def post():
     #Creates a SSH tunnel to grab data 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    privateKey = StringIO.StringIO(envprivatekey)
     if serverUsage == "ES":
-        mykey = paramiko.RSAKey.from_private_key(envprivatekey)
+        mykey = paramiko.RSAKey.from_private_key(privateKey)
     else:
-        mykey = paramiko.DSAKey.from_private_key(envprivatekey)
+        mykey = paramiko.DSSKey.from_private_key(privateKey)
 
     ssh.connect(hostname=envhost, port=int(envport), username=envuser, pkey=mykey)
     ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(SSHCOMMAND)
