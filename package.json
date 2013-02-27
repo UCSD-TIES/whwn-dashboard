@@ -15,7 +15,7 @@
 		"promised-io": ">= 0.3.0",
                 "ssh2": ">= 0.1.11",
                 "nano": "3.x",
-                "Miso.Dataset" : "*",
+                "miso.dataset" : "*",
                 "cron": "*",
                 "time": "*"
 
