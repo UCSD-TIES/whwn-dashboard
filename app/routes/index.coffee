@@ -7,8 +7,8 @@ cronJob = require('cron').CronJob
 
 
 #Declare the different variables grabbed from Heroku environment for SSH
-dotCloudPrivateKey = process.env['dotCloudPrivateKey']
-ec2PrivateKey = process.env['ec2PrivateKey']
+dotCloudpKey = process.env['dotcloudPRIVATEKEY']
+ec2pKey = process.env['ec2PRIVATEKEY']
 
 stageHost = process.env['STAGING_SSH_HOST']
 prodHost = process.env['PROD_SSH_HOST']
@@ -52,7 +52,7 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey) ->
 
   #The exec code will give the load average of the past 15 minutes, and then will return the number
   sshConnection.on "ready", -> 
-    sshConnection.exec "w | head -1 | awk '{print $12}' | rev | cut -b 2- | rev", (err, stream) ->
+    sshConnection.exec "w | head -1 | awk '{print $12}'", (err, stream) ->
       throw err if err
       stream.on "data", (data, extended) ->
         console.log ((if extended is "stderr" then "STDERR: " else "STDOUT ")) + data
@@ -79,19 +79,19 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey) ->
   return tempLoadAvg
 
 datalogjob = new cronJob(
-  #Every 4 hours right now....
-  cronTime: "0 */4 * * * *"
+  #Every 15 minutes.
+  cronTime: "*/15 * * * * *"
   onTick: ->
     #Grabs the loadaverage from each server by SSH into them
-    stageDBLoadAvg = sshLogin stageHost, stageDBPort, stageDBUser, dotCloudPrivateKey
-    stagePyLoadAvg = sshLogin stageHost, stagePyPort, stagePyUser, dotCloudPrivateKey
-    stageQLoadAvg = sshLogin stageHost, stageQPort, stageQUser, dotCloudPrivateKey
-    stageWorkersLoadAvg = sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudPrivateKey
-    prodDBLoadAvg = sshLogin prodHost, prodDBPort, prodDBUser, dotCloudPrivateKey
-    prodPyLoadAvg = sshLogin prodHost, prodPyPort, prodPyUser, dotCloudPrivateKey
-    prodQLoadAvg = sshLogin prodHost, prodQPort, prodQUser, dotCloudPrivateKey
-    prodWorkersLoadAvg = sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudPrivateKey
-    esLoadAvg = sshLogin esHost, esPort, esUser, ec2PrivateKey
+    stageDBLoadAvg = sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey
+    stagePyLoadAvg = sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey
+    stageQLoadAvg = sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey
+    stageWorkersLoadAvg = sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey
+    prodDBLoadAvg = sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey
+    prodPyLoadAvg = sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey
+    prodQLoadAvg = sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey
+    prodWorkersLoadAvg = sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey
+    esLoadAvg = sshLogin esHost, esPort, esUser, ec2pKey
 
     currentTime = Date.now()
     #Insert into database
