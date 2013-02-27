@@ -1,6 +1,6 @@
 #Modules required
 ConnectServ = require 'ssh2'
-nano = require("nano")("http://localhost:5984")
+nano = require("nano")(process.env['CLOUDANT_URL'])
 db_name = "wstats"
 db = nano.use(db_name)
 cronJob = require('cron').CronJob
