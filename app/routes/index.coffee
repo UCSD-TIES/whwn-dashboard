@@ -69,6 +69,7 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey) ->
 
   sshConnection.on "close", (had_error) ->
     console.log "Connection closed due to " + had_error
+    return tempLoadAvg
 
   sshConnection.connect
     host: sshHost
@@ -76,11 +77,10 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey) ->
     username: sshUser
     privateKey: sshPrivateKey
 
-  return tempLoadAvg
 
 datalogjob = new cronJob(
   #Every 15 minutes.
-  cronTime: "*/15 * * * * *"
+  cronTime: "0 */60 * * * *"
   onTick: ->
     #Grabs the loadaverage from each server by SSH into them
     stageDBLoadAvg = sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey
