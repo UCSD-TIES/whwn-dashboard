@@ -154,4 +154,4 @@ exports.setupPOST = (req, res) ->
                       return
                 datalogjob.start()
                 console.log "Successfully Started CronJob"
-
+          res.render 'setup', { title: 'Configuration', status2: status}
