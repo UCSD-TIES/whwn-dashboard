@@ -154,4 +154,9 @@ exports.setupPOST = (req, res) ->
                       return
                 datalogjob.start()
                 console.log "Successfully Started CronJob"
+          test = nano.use('activate')
+          status = ""
+          test.get 'onlinestatus',
+            (err, body) ->
+              status = body.online unless err 
           res.render 'setup', { title: 'Configuration', status2: status}
