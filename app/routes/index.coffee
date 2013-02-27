@@ -94,7 +94,7 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey) ->
 
 datalogjob = new cronJob(
   #Every 15 minutes.
-  cronTime: "0 * * * * *"
+  cronTime: "0 */15 * * * *"
   onTick: ->
     #Grabs the loadaverage from each server by SSH into them
     sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey
