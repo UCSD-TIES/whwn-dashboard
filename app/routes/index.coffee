@@ -42,7 +42,15 @@ prodWorkersUser = process.env['PROD_WORKERS_SSH_USER']
 esPort = 22
 esUser = process.env['EC2_ES_SSH_USER']
 
-tempLoadAvg = ""
+stageDBLoadAvg = ""
+stagePyLoadAvg = ""
+stageQLoadAvg = ""
+stageWorkersLoadAvg = ""
+prodDBLoadAvg = ""
+prodPyLoadAvg = ""
+prodQLoadAvg = ""
+prodWorkersLoadAvg = ""
+esLoadAvg = ""
 
 #SSH Method
 sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey) ->
@@ -56,8 +64,15 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey) ->
       throw err if err
       stream.on "data", (data, extended) ->
         console.log ((if extended is "stderr" then "STDERR: " else "STDOUT ")) + data
-        tempLoadAvg = parseFloat(data.toString('ascii'))
-
+        stageDBLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageDBPort
+        stagePyLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stagePyPort
+        stageQLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageQPort
+        stageWorkersLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageWorkersPort
+        prodDBLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodDBPort
+        prodPyLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodPyPort
+        prodQLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodQPort
+        prodWorkersLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodWorkersPort
+        esLoadAvg = parseFloat(data.toString('ascii')) if sshPort is esPort
       stream.on "exit", (data, extended) -> 
         sshConnection.end()
 
@@ -69,7 +84,6 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey) ->
 
   sshConnection.on "close", (had_error) ->
     console.log "Connection closed due to " + had_error
-    return tempLoadAvg
 
   sshConnection.connect
     host: sshHost
@@ -83,15 +97,15 @@ datalogjob = new cronJob(
   cronTime: "0 * * * * *"
   onTick: ->
     #Grabs the loadaverage from each server by SSH into them
-    stageDBLoadAvg = sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey
-    stagePyLoadAvg = sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey
-    stageQLoadAvg = sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey
-    stageWorkersLoadAvg = sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey
-    prodDBLoadAvg = sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey
-    prodPyLoadAvg = sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey
-    prodQLoadAvg = sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey
-    prodWorkersLoadAvg = sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey
-    esLoadAvg = sshLogin esHost, esPort, esUser, ec2pKey
+    sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey
+    sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey
+    sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey
+    sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey
+    sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey
+    sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey
+    sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey
+    sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey
+    sshLogin esHost, esPort, esUser, ec2pKey
 
     currentTime = Date.now()
     #Insert into database
