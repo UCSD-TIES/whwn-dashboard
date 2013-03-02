@@ -43,36 +43,87 @@ esPort = 22
 esUser = process.env['EC2_ES_SSH_USER']
 
 stageDBLoadAvg = ""
+stageDBMemTotal = ""
+stageDBMemFree = ""
 stagePyLoadAvg = ""
+stagePyMemTotal = ""
+stagePyMemFree = ""
 stageQLoadAvg = ""
+stageQMemTotal = ""
+stageQMemFree = ""
 stageWorkersLoadAvg = ""
+stageWorkersMemTotal = ""
+stageWorkersMemFree = ""
 prodDBLoadAvg = ""
+prodDBMemTotal = ""
+prodDBMemFree = ""
 prodPyLoadAvg = ""
+prodPyMemTotal = ""
+prodPyMemFree = ""
 prodQLoadAvg = ""
+prodQMemTotal = ""
+prodQMemFree = ""
 prodWorkersLoadAvg = ""
+prodWorkersMemTotal= ""
+prodWorkersMemFree = ""
 esLoadAvg = ""
+esMemTotal = "" 
+esMemFree = ""
 
+#Mem Parser, parses the memory data. It could be more efficient to just SSH into the system again
+#but that increases cost on our paid network side.....
+memPercentage = (memoryTotal, memoryFree) -> 
+  return 0 if memoryTotal < memoryFree
+  return 0 if memoryTotal == memoryFree
+  if memoryTotal > memoryFree
+    temp = memoryTotal - memoryFree
+    temp = temp/memoryTotal
+    temp = 1 - temp
+    return temp
 #SSH Method
-sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey) ->
+sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey, value) ->
   sshConnection = new ConnectServ()
   
   sshConnection.on "connect", ->  
 
   #The exec code will give the load average of the past 15 minutes, and then will return the number
   sshConnection.on "ready", -> 
-    sshConnection.exec "w | head -1 | awk '{print $12}'", (err, stream) ->
+    connection = "w | head -1 | awk '{print $12}'" if value = "CPU"
+    connection = "egrep 'Mem' /proc/meminfo | awk '{print $2}' | head -1" if value = "MemoryTotal"
+    connection = "egrep 'Mem' /proc/meminfo | awk '{print $2}' | tail -1" if value = "MemoryFree"
+    sshConnection.exec connection, (err, stream) ->
       throw err if err
       stream.on "data", (data, extended) ->
         console.log ((if extended is "stderr" then "STDERR: " else "STDOUT ")) + data
-        stageDBLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageDBPort
-        stagePyLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stagePyPort
-        stageQLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageQPort
-        stageWorkersLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageWorkersPort
-        prodDBLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodDBPort
-        prodPyLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodPyPort
-        prodQLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodQPort
-        prodWorkersLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodWorkersPort
-        esLoadAvg = parseFloat(data.toString('ascii')) if sshPort is esPort
+        stageDBLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageDBPort and value is "CPU"
+        stagePyLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stagePyPort and value is "CPU"
+        stageQLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageQPort and value is "CPU"
+        stageWorkersLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageWorkersPort and value is "CPU"
+        prodDBLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodDBPort and value is "CPU"
+        prodPyLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodPyPort and value is "CPU"
+        prodQLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodQPort and value is "CPU"
+        prodWorkersLoadAvg = parseFloat(data.toString('ascii')) if sshPort is prodWorkersPort and value is "CPU"
+        esLoadAvg = parseFloat(data.toString('ascii')) if sshPort is esPort and value is "CPU"
+
+        stageDBMemTotal = parseFloat(data.toString('ascii')) if sshPort is stageDBPort and value is "MemoryTotal"
+        stagePyMemTotal = parseFloat(data.toString('ascii')) if sshPort is stagePyPort and value is "MemoryTotal"
+        stageQMemTotal = parseFloat(data.toString('ascii')) if sshPort is stageQPort and value is "MemoryTotal"
+        stageWorkersMemTotal = parseFloat(data.toString('ascii')) if sshPort is stageWorkersPort and value is "MemoryTotal"
+        prodDBMemTotal = parseFloat(data.toString('ascii')) if sshPort is prodDBPort and value is "MemoryTotal"
+        prodPyMemTotal = parseFloat(data.toString('ascii')) if sshPort is prodPyPort and value is "MemoryTotal"
+        prodQMemTotal = parseFloat(data.toString('ascii')) if sshPort is prodQPort and value is "MemoryTotal"
+        prodWorkersMemTotal = parseFloat(data.toString('ascii')) if sshPort is prodWorkersPort and value is "MemoryTotal"
+        esMemTotal = parseFloat(data.toString('ascii')) if sshPort is esPort and value is "MemoryTotal"
+
+        stageDBMemFree = parseFloat(data.toString('ascii')) if sshPort is stageDBPort and value is "MemoryFree"
+        stagePyMemFree = parseFloat(data.toString('ascii')) if sshPort is stagePyPort and value is "MemoryFree"
+        stageQMemFree = parseFloat(data.toString('ascii')) if sshPort is stageQPort and value is "MemoryFree"
+        stageWorkersMemFree = parseFloat(data.toString('ascii')) if sshPort is stageWorkersPort and value is "MemoryFree"
+        prodDBMemFree = parseFloat(data.toString('ascii')) if sshPort is prodDBPort and value is "MemoryFree"
+        prodPyMemFree = parseFloat(data.toString('ascii')) if sshPort is prodPyPort and value is "MemoryFree"
+        prodQMemFree = parseFloat(data.toString('ascii')) if sshPort is prodQPort and value is "MemoryFree"
+        prodWorkersMemFree = parseFloat(data.toString('ascii')) if sshPort is prodWorkersPort and value is "MemoryFree"
+        esMemFree = parseFloat(data.toString('ascii')) if sshPort is esPort and value is "MemoryFree"
       stream.on "exit", (data, extended) -> 
         sshConnection.end()
 
@@ -97,15 +148,35 @@ datalogjob = new cronJob(
   cronTime: "0 */15 * * * *"
   onTick: ->
     #Grabs the loadaverage from each server by SSH into them
-    sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey
-    sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey
-    sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey
-    sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey
-    sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey
-    sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey
-    sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey
-    sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey
-    sshLogin esHost, esPort, esUser, ec2pKey
+    sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey, "CPU"
+    sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey, "CPU"
+    sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey, "CPU"
+    sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey, "CPU"
+    sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey, "CPU"
+    sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey, "CPU"
+    sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey, "CPU"
+    sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey, "CPU"
+    sshLogin esHost, esPort, esUser, ec2pKey, "CPU"
+
+    sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey, "Memory"
+    sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey, "Memory"
+    sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey, "Memory"
+    sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey, "Memory"
+    sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey, "Memory"
+    sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey, "Memory"
+    sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey, "Memory"
+    sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey, "Memory"
+    sshLogin esHost, esPort, esUser, ec2pKey, "Memory"
+
+    stageDBMem = memPercentage stageDBMemTotal, stageDBMemFree
+    stagePyMem = memPercentage stagePyMemTotal, stagePyMemFree
+    stageQMem = memPercentage stageQMemTotal, stageQMemFree
+    stageWorkersMem = memPercentage stageWorkersMemTotal, stageWorkersMemFree
+    prodDBMem = memPercentage prodDBMemTotal, prodDBMemFree
+    prodPyMem = memPercentage prodPyMemTotal, prodPyMemFree
+    prodQMem = memPercentage prodQMemTotal, prodQMemFree
+    prodWorkersMem = memPercentage prodWorkersMemTotal, prodWorkersMemFree
+    esMem = memPercentage esMemTotal, esMemFree
 
     currentTime = Date.now().toString()
     #Insert into database
@@ -114,16 +185,24 @@ datalogjob = new cronJob(
         #Don't return as the database has most likely been created previously...
         console.log "error occured due to status code ", error.message
       db.insert
-        stagedb: stageDBLoadAvg
-        stagepy: stagePyLoadAvg
-        stageq: stageQLoadAvg
-        stageworkers: stageWorkersLoadAvg
-        proddb: prodDBLoadAvg
-        prodpy: prodPyLoadAvg
-        prodq: prodQLoadAvg
-        prodworkers: prodWorkersLoadAvg
-        es: esLoadAvg
-        date: currentTime
+        stagedbloadavg: stageDBLoadAvg
+        stagepyloadavg: stagePyLoadAvg
+        stageqloadavg: stageQLoadAvg
+        stageworkersloadavg: stageWorkersLoadAvg
+        proddbloadavg: prodDBLoadAvg
+        prodpyloadavg: prodPyLoadAvg
+        prodqloadavg: prodQLoadAvg
+        prodworkersloadavg: prodWorkersLoadAvg
+        esloadavg: esLoadAvg
+        stagedbmem: stageDBMem
+        stagepymem: stagePyMem
+        stageqmem: stageQMem
+        stageworkersmem: stageWorkersMem
+        proddbmem: prodDBMem
+        prodpymem: prodPyMem
+        prodqmem: prodQMem
+        prodworkersmem: prodWorkersMem
+        esmem: esMem
       , currentTime, (error2, body, header) ->
         if error2
           console.log "error occured due to status code ", error2.message
