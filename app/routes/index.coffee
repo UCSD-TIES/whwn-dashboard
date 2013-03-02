@@ -107,7 +107,7 @@ datalogjob = new cronJob(
     sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey
     sshLogin esHost, esPort, esUser, ec2pKey
 
-    currentTime = Date.now()
+    currentTime = Date.now().toString()
     #Insert into database
     nano.db.create db_name, (error, body, headers) ->
       if error
@@ -124,7 +124,7 @@ datalogjob = new cronJob(
         prodworkers: prodWorkersLoadAvg
         es: esLoadAvg
         date: currentTime
-      , (error2, body, header) ->
+      , currentTime, (error2, body, header) ->
         if error2
           console.log "error occured due to status code ", error2.message
           return
