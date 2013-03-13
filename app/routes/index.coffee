@@ -158,15 +158,26 @@ datalogjob = new cronJob(
     sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey, "CPU"
     sshLogin esHost, esPort, esUser, ec2pKey, "CPU"
 
-    sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey, "Memory"
-    sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey, "Memory"
-    sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey, "Memory"
-    sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey, "Memory"
-    sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey, "Memory"
-    sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey, "Memory"
-    sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey, "Memory"
-    sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey, "Memory"
-    sshLogin esHost, esPort, esUser, ec2pKey, "Memory"
+    sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey, "MemoryTotal"
+    sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey, "MemoryTotal"
+    sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey, "MemoryTotal"
+    sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey, "MemoryTotal"
+    sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey, "MemoryTotal"
+    sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey, "MemoryTotal"
+    sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey, "MemoryTotal"
+    sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey, "MemoryTotal"
+    sshLogin esHost, esPort, esUser, ec2pKey, "MemoryTotal"
+
+    sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey, "MemoryFree"
+    sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey, "MemoryFree"
+    sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey, "MemoryFree"
+    sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey, "MemoryFree"
+    sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey, "MemoryFree"
+    sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey, "MemoryFree"
+    sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey, "MemoryFree"
+    sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey, "MemoryFree"
+    sshLogin esHost, esPort, esUser, ec2pKey, "MemoryFree"
+
 
     stageDBMem = memPercentage stageDBMemTotal, stageDBMemFree
     stagePyMem = memPercentage stagePyMemTotal, stagePyMemFree
