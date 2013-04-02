@@ -91,6 +91,7 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey, value) ->
     connection = "w | head -1 | awk '{print $12}'" if value = "CPU"
     connection = "egrep 'Mem' /proc/meminfo | awk '{print $2}' | head -1" if value = "MemoryTotal"
     connection = "egrep 'Mem' /proc/meminfo | awk '{print $2}' | tail -1" if value = "MemoryFree"
+    console.log connection
     sshConnection.exec connection, (err, stream) ->
       throw err if err
       stream.on "data", (data, extended) ->
