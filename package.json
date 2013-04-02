@@ -17,7 +17,8 @@
                 "nano": "3.x",
                 "miso.dataset" : "*",
                 "cron": "*",
-                "time": "*"
+                "time": "*",
+                "async": "*"
 
         },
 
