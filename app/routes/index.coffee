@@ -4,7 +4,7 @@ nano = require("nano")(process.env['CLOUDANT_URL'])
 db_name = "wstats"
 db = nano.use(db_name)
 cronJob = require('cron').CronJob
-
+async = require 'async'
 
 #Declare the different variables grabbed from Heroku environment for SSH
 dotCloudpKey = process.env['dotcloudPRIVATEKEY']
