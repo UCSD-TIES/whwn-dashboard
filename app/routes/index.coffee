@@ -4,7 +4,6 @@ nano = require("nano")(process.env['CLOUDANT_URL'])
 db_name = "wstats"
 db = nano.use(db_name)
 cronJob = require('cron').CronJob
-async = require 'async'
 
 #Declare the different variables grabbed from Heroku environment for SSH
 dotCloudpKey = process.env['dotcloudPRIVATEKEY']
@@ -149,64 +148,35 @@ datalogjob = new cronJob(
   cronTime: "0 * * * * *"
   onTick: ->
     #Grabs the loadaverage from each server by SSH into them
-    # async.series [(callback) -> 
     sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey, "CPU"
     console.log "CPU stageDB"
-      #, (callback) -> 
     sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey, "CPU"
     console.log "CPU stagePY"
-      #, (callback) -> 
     sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey, "CPU"
     console.log "CPU StageQ"
-      #, (callback) -> 
     sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey, "CPU"
-      #, (callback) -> 
     sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey, "CPU"
-      #, (callback) -> 
     sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey, "CPU"
-      #, (callback) -> 
     sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey, "CPU"
-      #, (callback) ->
     sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey, "CPU"
-      #, (callback) ->
     sshLogin esHost, esPort, esUser, ec2pKey, "CPU"
-      #, (callback) ->
     sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey, "MemoryTotal"
-      #, (callback) ->
     sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey, "MemoryTotal"
-      #, (callback) -> 
     sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey, "MemoryTotal"
-      #, (callback) -> 
     sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey, "MemoryTotal"
-      #, (callback) -> 
     sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey, "MemoryTotal"
-      #, (callback) -> 
     sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey, "MemoryTotal"
-      #, (callback) -> 
     sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey, "MemoryTotal"
-      #, (callback) -> 
     sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey, "MemoryTotal"
-      #, (callback) -> 
     sshLogin esHost, esPort, esUser, ec2pKey, "MemoryTotal"
-      #, (callback) ->
     sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey, "MemoryFree"
-      #, (callback) ->
     sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey, "MemoryFree"
-      #, (callback) ->
     sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey, "MemoryFree"
-      #, (callback) ->
     sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey, "MemoryFree"
-      #, (callback) ->
     sshLogin prodHost, prodDBPort, prodDBUser, dotCloudpKey, "MemoryFree"
-      #, (callback) ->
     sshLogin prodHost, prodPyPort, prodPyUser, dotCloudpKey, "MemoryFree"
-      #, (callback) ->
     sshLogin prodHost, prodQPort, prodQUser, dotCloudpKey, "MemoryFree"
-      #, (callback) ->
-    sshLogin prodHost, prodWorkersPort, prodWorkersUser, dotCloudpKey, "MemoryFree"
-      #, (callback) ->
     sshLogin esHost, esPort, esUser, ec2pKey, "MemoryFree"
-    #]
 
     stageDBMem = memPercentage stageDBMemTotal, stageDBMemFree
     stagePyMem = memPercentage stagePyMemTotal, stagePyMemFree
