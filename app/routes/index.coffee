@@ -151,10 +151,13 @@ datalogjob = new cronJob(
     #Grabs the loadaverage from each server by SSH into them
     async.series [(callback) -> 
       sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey, "CPU"
+      console.log "CPU stageDB"
     , (callback) -> 
       sshLogin stageHost, stagePyPort, stagePyUser, dotCloudpKey, "CPU"
+      console.log "CPU stagePY"
     , (callback) -> 
       sshLogin stageHost, stageQPort, stageQUser, dotCloudpKey, "CPU"
+      console.log "CPU StageQ"
     , (callback) -> 
       sshLogin stageHost, stageWorkersPort, stageWorkersUser, dotCloudpKey, "CPU"
     , (callback) -> 
