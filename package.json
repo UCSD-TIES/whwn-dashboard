@@ -18,8 +18,8 @@
                 "miso.dataset" : "*",
                 "cron": "*",
                 "time": "*",
-                "async": "*"
-
+                "async": "*",
+                "underscore": "*"
         },
 
 	"devDependencies" : {
