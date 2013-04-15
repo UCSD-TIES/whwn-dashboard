@@ -56,7 +56,7 @@ stageWorkersLoadAvg = ""
 stageWorkersMemTotal = ""
 stageWorkersMemFree = ""
 prodDBLoadAvg = ""
-prodDBMemTotalg = ""
+prodDBMemTotal = ""
 prodDBMemFree = ""
 prodPyLoadAvg = ""
 prodPyMemTotal = ""
@@ -101,7 +101,7 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey, value) ->
     sshConnection.exec connection, (err, stream) ->
       throw err if err
       stream.on "data", (data, extended) ->
-        consogle.log ((if extended is "stderr" then "STDERR: " else "STDOUT ")) + data
+        console.log ((if extended is "stderr" then "STDERR: " else "STDOUT ")) + data
         stageDBLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageDBPort and value is "CPU"
         stagePyLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stagePyPort and value is "CPU"
         stageQLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageQPort and value is "CPU" 
