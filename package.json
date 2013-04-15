@@ -15,11 +15,12 @@
 		"promised-io": ">= 0.3.0",
                 "ssh2": ">= 0.1.11",
                 "nano": "3.x",
-                "miso.dataset" : "*",
                 "cron": "*",
                 "time": "*",
                 "async": "*",
-                "underscore": "*"
+                "underscore": "*",
+                "quiche": "*",
+                "now": "*"
         },
 
 	"devDependencies" : {

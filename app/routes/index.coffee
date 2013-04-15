@@ -1,9 +1,11 @@
 #Modules required
 ConnectServ = require 'ssh2'
-nano = require("nano")(process.env['CLOUDANT_URL'])
+#nano = require("nano")(process.env['CLOUDANT_URL'])
+nano = require("nano")('http://localhost:5984')
 db_name = "wstats"
 db = nano.use(db_name)
 cronJob = require('cron').CronJob
+async = require 'async'
 
 #Declare the different variables grabbed from Heroku environment for SSH
 dotCloudpKey = process.env['dotcloudPRIVATEKEY']
@@ -54,7 +56,7 @@ stageWorkersLoadAvg = ""
 stageWorkersMemTotal = ""
 stageWorkersMemFree = ""
 prodDBLoadAvg = ""
-prodDBMemTotal = ""
+prodDBMemTotalg = ""
 prodDBMemFree = ""
 prodPyLoadAvg = ""
 prodPyMemTotal = ""
@@ -72,7 +74,7 @@ esMemFree = ""
 cpuCommand = "w | head -1 | awk '{print $12}'"
 memoryTotalCommand = "egrep 'Mem' /proc/meminfo | awk '{print $2}' | head -1"
 memoryFreeCommand = "egrep 'Mem' /proc/meminfo | awk '{print $2}' | tail -1"
-   
+
 #Mem Parser, parses the memory data. It could be more efficient to just SSH into the system again
 #but that increases cost on our paid network side.....
 memPercentage = (memoryTotal, memoryFree) -> 
@@ -99,7 +101,7 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey, value) ->
     sshConnection.exec connection, (err, stream) ->
       throw err if err
       stream.on "data", (data, extended) ->
-        console.log ((if extended is "stderr" then "STDERR: " else "STDOUT ")) + data
+        consogle.log ((if extended is "stderr" then "STDERR: " else "STDOUT ")) + data
         stageDBLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageDBPort and value is "CPU"
         stagePyLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stagePyPort and value is "CPU"
         stageQLoadAvg = parseFloat(data.toString('ascii')) if sshPort is stageQPort and value is "CPU" 
@@ -227,8 +229,256 @@ datalogjob = new cronJob(
   start: false
 )
 
+newTime = (docid) -> 
+  currentTime = Date.now().toString()
+  subtractTime = currentTime - docid
+  subtractTime = (-((((subtractTime / 1000) / 60) / 60) / 24)).toFixed(4)
+  return subtractTime
+
+
+exports.test =  (req, res) ->
+    db.view "", "getAll", (error, body, headers) ->
+          res.send body, 200
+
 exports.index = (req, res) ->
-	res.render 'index', { title: 'Graphs' }
+      prodDBCPUArrx = []
+      prodDBCPUArry = []
+      prodPyCPUArrx = []
+      prodPyCPUArry = []
+      prodQCPUArrx = []
+      prodQCPUArry = []
+      prodWorkersCPUArrx = []
+      prodWorkersCPUArry = []
+      esCPUArrx = []
+      esCPUArry = []
+      stageDBCPUArrx = []
+      stageDBCPUArry = []
+      stagePyCPUArrx = []
+      stagePyCPUArry = []
+      stageQCPUArrx = []
+      stageQCPUArry = []
+      stageWorkersCPUArrx = []
+      stageWorkersCPUArry = []
+      prodDBMemArrx = []
+      prodDBMemArry = []
+      prodPyMemArrx = []
+      prodPyMemArry = []
+      prodQMemArrx = []
+      prodQMemArry = []
+      prodWorkersMemArrx = []
+      prodWorkersMemArry = []
+      esMemArrx = []
+      esMemArry = []
+      stageDBMemArrx = []
+      stageDBMemArry = []
+      stagePyMemArrx = []
+      stagePyMemArry = []
+      stageQMemArrx = []
+      stageQMemArry = []
+      stageWorkersMemArrx = []
+      stageWorkersMemArry = []
+      async.series [ (callback) ->
+          db.view 'proddbcpu', 'proddbcpu', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                prodDBCPUArrx.push(currentTime)
+                prodDBCPUArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log prodDBCPUArrx
+              console.log prodDBCPUArry
+              callback(null, 'one')
+        , (callback) ->
+          db.view 'prodpycpu', 'prodpycpu', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                prodPyCPUArrx.push(currentTime)
+                prodPyCPUArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log prodPyCPUArrx
+              console.log prodPyCPUArry
+              callback(null, 'two')
+        , (callback) ->
+          db.view 'prodqcpu', 'prodqcpu', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                prodQCPUArrx.push(currentTime)
+                prodQCPUArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log prodQCPUArrx
+              console.log prodQCPUArry
+              callback(null, 'three')
+        , (callback) ->
+          db.view 'prodworkerscpu', 'prodworkerscpu', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                prodWorkersCPUArrx.push(currentTime)
+                prodWorkersCPUArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log prodWorkersCPUArrx
+              console.log prodWorkersCPUArry
+              callback(null, 'four')
+        , (callback) ->
+          db.view 'escpu', 'escpu', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                esCPUArrx.push(currentTime)
+                esCPUArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log esCPUArrx
+              console.log esCPUArry
+              callback(null, 'five')
+        , (callback) ->
+          db.view 'stagedbcpu', 'stagedbcpu', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                stageDBCPUArrx.push(currentTime)
+                stageDBCPUArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log stageDBCPUArrx
+              console.log stageDBCPUArry
+              callback(null, 'six')
+        , (callback) ->
+          db.view 'stagepycpu', 'stagepycpu', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                stagePyCPUArrx.push(currentTime)
+                stagePyCPUArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log stagePyCPUArrx
+              console.log stagePyCPUArry
+              callback(null, 'seven')
+        , (callback) ->
+          db.view 'stageqcpu', 'stageqcpu', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                stageQCPUArrx.push(currentTime)
+                stageQCPUArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log stageQCPUArrx
+              console.log stageQCPUArry
+              callback(null, 'eight')
+        , (callback) ->
+          db.view 'proddbmemratio', 'proddbmemratio', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                prodDBMemArrx.push(currentTime)
+                prodDBMemArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log prodDBMemArrx
+              console.log prodDBMemArry
+              callback(null, 'nine')
+        , (callback) ->
+          db.view 'prodpymemratio', 'prodpymemratio', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                prodPyMemArrx.push(currentTime)
+                prodPyMemArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log prodPyMemArrx
+              console.log prodPyMemArry
+              callback(null, 'ten')
+        , (callback) ->
+          db.view 'prodqmemratio', 'prodqmemratio', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                prodQMemArrx.push(currentTime)
+                prodQMemArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log prodQMemArrx
+              console.log prodQMemArry
+              callback(null, 'eleven')
+        , (callback) ->
+          db.view 'prodworkersmemratio', 'prodworkersmemratio', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                prodWorkersMemArrx.push(currentTime)
+                prodWorkersMemArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log prodWorkersMemArrx
+              console.log prodWorkersMemArry
+              callback(null, 'twelve')
+        , (callback) ->
+          db.view 'esmemratio', 'esmemratio', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                esMemArrx.push(currentTime)
+                esMemArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log esMemArrx
+              console.log esMemArry
+              callback(null, 'thirteen')
+        , (callback) ->
+          db.view 'stagedbmemratio', 'stagedbmemratio', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                stageDBMemArrx.push(currentTime)
+                stageDBMemArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log stageDBMemArrx
+              console.log stageDBMemArry
+              callback(null, 'fourteen')
+        , (callback) ->
+          db.view 'stagepymemratio', 'stagepymemratio', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                stagePyMemArrx.push(currentTime)
+                stagePyMemArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log stagePyMemArrx
+              console.log stagePyMemArry
+              callback(null, 'fifteen')
+        , (callback) ->
+          db.view 'stageqmemratio', 'stageqmemratio', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                stageQMemArrx.push(currentTime)
+                stageQMemArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log stageQMemArrx
+              console.log stageQMemArry
+              callback(null, 'sixteen')
+        , (callback) ->
+          db.view 'stageworkersmemratio', 'stageworkersmemratio', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                stageWorkersMemArrx.push(currentTime)
+                stageWorkersMemArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log stageWorkersMemArrx
+              console.log stageWorkersMemArry
+              callback(null, 'seventeen')
+        , (callback) ->
+          db.view 'stageworkerscpu', 'stageworkerscpu', (err, body) ->
+            unless err
+              body.rows.forEach (doc) -> 
+                currentTime = newTime doc.id
+                stageWorkersCPUArrx.push(currentTime)
+                stageWorkersCPUArry.push((doc.value).toFixed(4))
+                console.log doc
+              console.log stageWorkersCPUArrx
+              console.log stageWorkersCPUArry
+              callback(null, 'eighteen')
+        , (callback) ->  
+          res.render 'index', { title: 'Graphs', prodDBCPUArrx: prodDBCPUArrx, prodDBCPUArry: prodDBCPUArry, prodPyCPUArrx: prodPyCPUArrx, prodPyCPUArry: prodPyCPUArry, prodQCPUArrx: prodQCPUArrx, prodQCPUArry: prodQCPUArry,prodWorkersCPUArrx: prodWorkersCPUArrx, prodWorkersCPUArry: prodWorkersCPUArry, esCPUArrx: esCPUArrx,       esCPUArry: esCPUArry, stageDBCPUArrx: stageDBCPUArrx, stageDBCPUArry: stageDBCPUArry, stagePyCPUArrx: stagePyCPUArrx, stagePyCPUArry: stagePyCPUArry, stageQCPUArrx: stageQCPUArrx, stageQCPUArry: stageQCPUArry, stageWorkersCPUArrx: stageWorkersCPUArrx, stageWorkersCPUArry: stageWorkersCPUArry,prodDBMemArrx: prodDBMemArrx,      prodDBMemArry: prodDBMemArry, prodPyMemArrx: prodPyMemArrx, prodPyMemArry: prodPyMemArry, prodQMemArrx: prodQMemArrx, prodQMemArry: prodQMemArry,                prodWorkersMemArrx: prodWorkersMemArrx, prodWorkersMemArry: prodWorkersMemArry, esMemArrx: esMemArrx, esMemArry: esMemArry, stageDBMemArrx: stageDBMemArrx,     stageDBMemArry: stageDBMemArry, stagePyMemArrx: stagePyMemArrx, stagePyMemArry: stagePyMemArry, stageQMemArrx: stageQMemArrx, stageQMemArry: stageQMemArry,        stageWorkersMemArrx: stageWorkersMemArrx, stageWorkersMemArry: stageWorkersMemArry }
+          callback(null, 'nineteen')
+        ]
 
 exports.setupGET = (req, res) ->
         test = nano.use('activate')

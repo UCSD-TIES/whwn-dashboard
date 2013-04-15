@@ -2,9 +2,373 @@
 html
   head
     title= title
-    link(rel='stylesheet', href='/libs/bootstrap/css/cyborg-modified.bootstrap.min.css')
+    link(rel='stylesheet', href='/libs/bootstrap/css/slate.bootstrap.min.css')
     link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap-responsive.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    script(type='text/javascript', src='https://www.google.com/jsapi')
+    script(type='text/javascript')
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawAllCharts);
+      function zip(arrays) {
+        return arrays[0].map(function(_,i){
+          return arrays.map(function(array){return array[i]})
+        });
+        }
+      function parseFromString(arrays,tag) {
+        newArray = [];
+        newArray.push(tag);
+        for (var i = 0; i < arrays.length; i++) {
+          newArray.push(parseFloat(arrays[i]));
+        }
+        return newArray;
+      }
+      function drawChartProdDBCPU() {
+      var x = !{JSON.stringify(prodDBCPUArrx)};
+      var y = !{JSON.stringify(prodDBCPUArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'CPU Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Production Database CPU Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divProdDBCPU'));
+      chart.draw(data, options);
+      }      
+      function drawChartProdPyCPU() {
+      var x = !{JSON.stringify(prodPyCPUArrx)};
+      var y = !{JSON.stringify(prodPyCPUArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'CPU Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Production Python CPU Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divProdPyCPU'));
+      chart.draw(data, options);
+      }
+      function drawChartProdQCPU() {
+      var x = !{JSON.stringify(prodQCPUArrx)};
+      var y = !{JSON.stringify(prodQCPUArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'CPU Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Production Queue CPU Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divProdQCPU'));
+      chart.draw(data, options);
+      }
+      function drawChartProdWorkersCPU() {
+      var x = !{JSON.stringify(prodWorkersCPUArrx)};
+      var y = !{JSON.stringify(prodWorkersCPUArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'CPU Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Production Workers CPU Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divProdWorkersCPU'));
+      chart.draw(data, options);
+      }
+      function drawChartesCPU() {
+      var x = !{JSON.stringify(esCPUArrx)};
+      var y = !{JSON.stringify(esCPUArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'CPU Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Elastic Search CPU Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divesCPU'));
+      chart.draw(data, options);
+      }
+      function drawChartStageDBCPU() {
+      var x = !{JSON.stringify(stageDBCPUArrx)};
+      var y = !{JSON.stringify(stageDBCPUArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'CPU Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Stage Database CPU Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divStageDBCPU'));
+      chart.draw(data, options);
+      }
+      function drawChartStagePyCPU() {
+      var x = !{JSON.stringify(stagePyCPUArrx)};
+      var y = !{JSON.stringify(stagePyCPUArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'CPU Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Stage Python CPU Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divStagePyCPU'));
+      chart.draw(data, options);
+      }
+      function drawChartStageQCPU() {
+      var x = !{JSON.stringify(stageQCPUArrx)};
+      var y = !{JSON.stringify(stageQCPUArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'CPU Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Stage Queue CPU Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divStageQCPU'));
+      chart.draw(data, options);
+      }
+      function drawChartStageWorkersCPU() {
+      var x = !{JSON.stringify(stageWorkersCPUArrx)};
+      var y = !{JSON.stringify(stageWorkersCPUArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'CPU Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Stage Workers CPU Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divStageWorkersCPU'));
+      chart.draw(data, options);
+      }
+      function drawChartProdDBMem() {
+      var x = !{JSON.stringify(prodDBMemArrx)};
+      var y = !{JSON.stringify(prodDBMemArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'Memory Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Production Database Memory Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divProdDBMem'));
+      chart.draw(data, options);
+      }
+      function drawChartProdPyMem() {
+      var x = !{JSON.stringify(prodPyMemArrx)};
+      var y = !{JSON.stringify(prodPyMemArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'Memory Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Production Python Memory Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divProdPyMem'));
+      chart.draw(data, options);
+      }
+      function drawChartProdQMem() {
+      var x = !{JSON.stringify(prodQMemArrx)};
+      var y = !{JSON.stringify(prodQMemArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'Memory Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Production Queue Memory Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divProdQMem'));
+      chart.draw(data, options);
+      }
+      function drawChartProdWorkersMem() {
+      var x = !{JSON.stringify(prodWorkersMemArrx)};
+      var y = !{JSON.stringify(prodWorkersMemArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'Memory Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Production Workers Memory Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divProdWorkersMem'));
+      chart.draw(data, options);
+      }
+      function drawChartesMem() {
+      var x = !{JSON.stringify(esMemArrx)};
+      var y = !{JSON.stringify(esMemArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'Memory Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Elastic Search Memory Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divesMem'));
+      chart.draw(data, options);
+      }
+      function drawChartStageDBMem() {
+      var x = !{JSON.stringify(stageDBMemArrx)};
+      var y = !{JSON.stringify(stageDBMemArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'Memory Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Stage Database Memory Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divStageDBMem'));
+      chart.draw(data, options);
+      }
+      function drawChartStagePyMem() {
+      var x = !{JSON.stringify(stagePyMemArrx)};
+      var y = !{JSON.stringify(stagePyMemArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'Memory Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Stage Python Memory Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divStagePyMem'));
+      chart.draw(data, options);
+      }
+      function drawChartStageQMem() {
+      var x = !{JSON.stringify(stageQMemArrx)};
+      var y = !{JSON.stringify(stageQMemArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'Memory Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Stage Queue Memory Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divStageQMem'));
+      chart.draw(data, options);
+      }
+      function drawChartStageWorkersMem() {
+      var x = !{JSON.stringify(stageWorkersMemArrx)};
+      var y = !{JSON.stringify(stageWorkersMemArry)};
+      var intx = parseFromString(x, 'Days Ago');
+      var inty = parseFromString(y, 'Memory Usage');
+      var zipped = zip([intx,inty]);
+      var data = google.visualization.arrayToDataTable(zipped);
+      var options = {
+      title: 'Stage Workers Memory Utilization',
+      titleTextStyle: {color: 'white'},
+      backgroundColor: '#272B30',
+      legend: {textStyle: {color: 'white'}},
+      hAxis: {baselineColor: 'white', textStyle: {color: 'white'}},
+      vAxis: {baselineColor: 'white', textStyle: {color: 'white'}}
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('chart_divStageWorkersMem'));
+      chart.draw(data, options);
+      }
+      function drawAllCharts() {
+        drawChartProdDBCPU();
+        drawChartProdPyCPU();
+        drawChartProdQCPU();
+        drawChartProdWorkersCPU();
+        drawChartesCPU();
+        drawChartStageDBCPU();
+        drawChartStagePyCPU();
+        drawChartStageQCPU();
+        drawChartStageWorkersCPU();
+        drawChartProdDBMem();
+        drawChartProdPyMem();
+        drawChartProdQMem();
+        drawChartProdWorkersMem();
+        drawChartesMem();
+        drawChartStageDBMem();
+        drawChartStagePyMem();
+        drawChartStageQMem();
+        drawChartStageWorkersMem();
+      }
+
+
+
   body
 
     .navbar.navbar-fixed-top
@@ -21,7 +385,43 @@ html
     .container
       .row
         .hero-unit
-          h2 Moo
+          h2 CPU Graphs
+
+          #chart_divProdDBCPU          
+          br
+          #chart_divProdPyCPU
+          br
+          #chart_divProdQCPU
+          br
+          #chart_divProdWorkersCPU
+          br
+          #chart_divesCPU
+          br
+          #chart_divStageDBCPU
+          br
+          #chart_divStagePyCPU
+          br
+          #chart_divStageQCPU
+          br
+          #chart_divStageWorkersCPU
+          h2 Memory Graphs
+          #chart_divProdDBMem
+          br
+          #chart_divProdPyMem
+          br
+          #chart_divProdQMem
+          br
+          #chart_divProdWorkersMem
+          br
+          #chart_divesMem
+          br
+          #chart_divStageDBMem
+          br
+          #chart_divStagePyMem
+          br
+          #chart_divStageQMem
+          br
+          #chart_divStageWorkersMem
            
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js")
     script(src="/libs/bootstrap/js/bootstrap.min.js")
