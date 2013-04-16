@@ -1,4 +1,5 @@
 nano = require("nano")('http://localhost:5984')
+nano.db.create('wstats')
 db_name = "wstats"
 db = nano.use(db_name)
 

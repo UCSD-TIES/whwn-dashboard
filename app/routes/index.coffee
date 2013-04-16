@@ -1,47 +1,49 @@
 #Modules required
 ConnectServ = require 'ssh2'
-nano = require("nano")(process.env['CLOUDANT_URL'])
-#nano = require("nano")('http://localhost:5984')
+nano = require("nano")('http://localhost:5984')
+cfg = require("../../config").Config
 db_name = "wstats"
 db = nano.use(db_name)
 cronJob = require('cron').CronJob
 async = require 'async'
 
+console.log cfg.dotcloudPRIVATEKEY
+
 #Declare the different variables grabbed from Heroku environment for SSH
-dotCloudpKey = process.env['dotcloudPRIVATEKEY']
-ec2pKey = process.env['ec2PRIVATEKEY']
+dotCloudpKey = cfg.dotcloudPRIVATEKEY
+ec2pKey = cfg.ec2PRIVATEKEY
 
-stageHost = process.env['STAGING_SSH_HOST']
-prodHost = process.env['PROD_SSH_HOST']
-esHost = process.env['EC2_ES_SSH_HOST']
+stageHost = cfg.STAGING_SSH_HOST
+prodHost = cfg.PROD_SSH_HOST
+esHost = cfg.EC2_ES_SSH_HOST
 
 
-stageDBPort = process.env['STAGING_DB_SSH_PORT']
-stageDBUser = process.env['STAGING_DB_SSH_USER']
+stageDBPort = cfg.STAGING_DB_SSH_PORT
+stageDBUser = cfg.STAGING_DB_SSH_USER
 
-stagePyPort = process.env['STAGING_PY_SSH_PORT']
-stagePyUser = process.env['STAGING_PY_SSH_USER']
+stagePyPort = cfg.STAGING_PY_SSH_PORT
+stagePyUser = cfg.STAGING_PY_SSH_USER
 
-stageQPort = process.env['STAGING_Q_SSH_PORT']
-stageQUser = process.env['STAGING_Q_SSH_USER']
+stageQPort = cfg.STAGING_Q_SSH_PORT
+stageQUser = cfg.STAGING_Q_SSH_USER
 
-stageWorkersPort = process.env['STAGING_WORKERS_SSH_PORT']
-stageWorkersUser = process.env['STAGING_WORKERS_SSH_USER']
+stageWorkersPort = cfg.STAGING_WORKERS_SSH_PORT
+stageWorkersUser = cfg.STAGING_WORKERS_SSH_USER
 
-prodDBPort = process.env['PROD_DB_SSH_PORT']
-prodDBUser = process.env['PROD_DB_SSH_USER']
+prodDBPort = cfg.PROD_DB_SSH_PORT
+prodDBUser = cfg.PROD_DB_SSH_USER
 
-prodPyPort = process.env['PROD_PY_SSH_PORT']
-prodPyUser = process.env['PROD_PY_SSH_USER']
+prodPyPort = cfg.PROD_PY_SSH_PORT
+prodPyUser = cfg.PROD_PY_SSH_USER
 
-prodQPort = process.env['PROD_Q_SSH_PORT']
-prodQUser = process.env['PROD_Q_SSH_USER']
+prodQPort = cfg.PROD_Q_SSH_PORT
+prodQUser = cfg.PROD_Q_SSH_USER
 
-prodWorkersPort = process.env['PROD_WORKERS_SSH_PORT']
-prodWorkersUser = process.env['PROD_WORKERS_SSH_USER']
+prodWorkersPort = cfg.PROD_WORKERS_SSH_PORT
+prodWorkersUser = cfg.PROD_WORKERS_SSH_USER
 
 esPort = 22
-esUser = process.env['EC2_ES_SSH_USER']
+esUser = cfg.EC2_ES_SSH_USER
 
 stageDBLoadAvg = ""
 stageDBMemTotal = ""
@@ -153,7 +155,7 @@ sshLogin = (sshHost, sshPort, sshUser, sshPrivateKey, value) ->
 
 datalogjob = new cronJob(
   #every minute
-  cronTime: "0 * * * * *"
+  cronTime: "0 */15 * * * *"
   onTick: ->
     #Grabs the loadaverage from each server by SSH into them
     sshLogin stageHost, stageDBPort, stageDBUser, dotCloudpKey, "CPU"
