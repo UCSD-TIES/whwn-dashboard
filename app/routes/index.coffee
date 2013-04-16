@@ -7,8 +7,6 @@ db = nano.use(db_name)
 cronJob = require('cron').CronJob
 async = require 'async'
 
-console.log cfg.dotcloudPRIVATEKEY
-
 #Declare the different variables grabbed from Heroku environment for SSH
 dotCloudpKey = cfg.dotcloudPRIVATEKEY
 ec2pKey = cfg.ec2PRIVATEKEY
@@ -285,7 +283,7 @@ exports.index = (req, res) ->
               body.rows.forEach (doc) -> 
                 currentTime = newTime doc.id
                 prodDBCPUArrx.push(currentTime)
-                prodDBCPUArry.push((doc.value).toFixed(4))
+                prodDBCPUArry.push(doc.value)
                 console.log doc
               console.log prodDBCPUArrx
               console.log prodDBCPUArry
@@ -296,7 +294,7 @@ exports.index = (req, res) ->
               body.rows.forEach (doc) -> 
                 currentTime = newTime doc.id
                 prodPyCPUArrx.push(currentTime)
-                prodPyCPUArry.push((doc.value).toFixed(4))
+                prodPyCPUArry.push(doc.value)
                 console.log doc
               console.log prodPyCPUArrx
               console.log prodPyCPUArry
@@ -307,7 +305,7 @@ exports.index = (req, res) ->
               body.rows.forEach (doc) -> 
                 currentTime = newTime doc.id
                 prodQCPUArrx.push(currentTime)
-                prodQCPUArry.push((doc.value).toFixed(4))
+                prodQCPUArry.push(doc.value)
                 console.log doc
               console.log prodQCPUArrx
               console.log prodQCPUArry
@@ -318,7 +316,7 @@ exports.index = (req, res) ->
               body.rows.forEach (doc) -> 
                 currentTime = newTime doc.id
                 prodWorkersCPUArrx.push(currentTime)
-                prodWorkersCPUArry.push((doc.value).toFixed(4))
+                prodWorkersCPUArry.push(doc.value)
                 console.log doc
               console.log prodWorkersCPUArrx
               console.log prodWorkersCPUArry
@@ -329,7 +327,7 @@ exports.index = (req, res) ->
               body.rows.forEach (doc) -> 
                 currentTime = newTime doc.id
                 esCPUArrx.push(currentTime)
-                esCPUArry.push((doc.value).toFixed(4))
+                esCPUArry.push(doc.value)
                 console.log doc
               console.log esCPUArrx
               console.log esCPUArry
@@ -340,7 +338,7 @@ exports.index = (req, res) ->
               body.rows.forEach (doc) -> 
                 currentTime = newTime doc.id
                 stageDBCPUArrx.push(currentTime)
-                stageDBCPUArry.push((doc.value).toFixed(4))
+                stageDBCPUArry.push(doc.value)
                 console.log doc
               console.log stageDBCPUArrx
               console.log stageDBCPUArry
@@ -351,7 +349,7 @@ exports.index = (req, res) ->
               body.rows.forEach (doc) -> 
                 currentTime = newTime doc.id
                 stagePyCPUArrx.push(currentTime)
-                stagePyCPUArry.push((doc.value).toFixed(4))
+                stagePyCPUArry.push(doc.value)
                 console.log doc
               console.log stagePyCPUArrx
               console.log stagePyCPUArry
@@ -362,7 +360,7 @@ exports.index = (req, res) ->
               body.rows.forEach (doc) -> 
                 currentTime = newTime doc.id
                 stageQCPUArrx.push(currentTime)
-                stageQCPUArry.push((doc.value).toFixed(4))
+                stageQCPUArry.push(doc.value)
                 console.log doc
               console.log stageQCPUArrx
               console.log stageQCPUArry
@@ -472,7 +470,7 @@ exports.index = (req, res) ->
               body.rows.forEach (doc) -> 
                 currentTime = newTime doc.id
                 stageWorkersCPUArrx.push(currentTime)
-                stageWorkersCPUArry.push((doc.value).toFixed(4))
+                stageWorkersCPUArry.push(doc.value)
                 console.log doc
               console.log stageWorkersCPUArrx
               console.log stageWorkersCPUArry
