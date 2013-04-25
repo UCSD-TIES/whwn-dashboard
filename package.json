@@ -15,10 +15,10 @@
 		"promised-io": ">= 0.3.0",
                 "ssh2": ">= 0.1.11",
                 "nano": "3.x",
-                "cron": "*",
-                "time": "*",
-                "async": "*",
-                "underscore": "*"
+                "cron": ">= 1.x",
+                "time": ">= 0.9.x",
+                "async": ">= 0.2.x",
+                "underscore": ">= 1.4.x"
         },
 
 	"devDependencies" : {
